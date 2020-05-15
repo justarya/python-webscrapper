@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 from io import BytesIO
 import base64
 import matplotlib.pyplot as plt
+import dateparser
 
 app = Flask(__name__)
 
@@ -14,8 +15,8 @@ def scrap(url):
     soup = BeautifulSoup(url_get.content,"html.parser")
     
     #Find the key to get the information
-    table = soup.find(___) 
-    tr = table.find_all(___) 
+    table = soup.find('table') 
+    tr = table.find_all('tr') 
 
     temp = [] #initiating a tuple
 
@@ -23,26 +24,28 @@ def scrap(url):
         row = table.find_all('tr')[i]
         #use the key to take information here
         #name_of_object = row.find_all(...)[0].text
+        date = row.find_all('td')[0].text
+        ask = row.find_all('td')[1].text
+        bid = row.find_all('td')[2].text
 
-
-
-
-
-
-        temp.append((___)) #append the needed information 
+        temp.append((date, ask, bid)) #append the needed information 
     
     temp = temp[::-1] #remove the header
 
-    df = pd.DataFrame(temp, columns = (___)) #creating the dataframe
-   #data wranggling -  try to change the data type to right data type
+    df = pd.DataFrame(temp, columns = ['date', 'ask', 'bid']) #creating the dataframe
+    #data wranggling -  try to change the data type to right data type
+    df['date'] = df['date'].apply(lambda x: dateparser.parse(x))
+    df['ask'] = df['ask'].str.replace(',', '.').apply(lambda x: float(x))
+    df['bid'] = df['bid'].str.replace(',', '.').apply(lambda x: float(x))
 
-   #end of data wranggling
+    df = df.set_index('date')
+    #end of data wranggling
 
     return df
 
 @app.route("/")
 def index():
-    df = scrap(___) #insert url here
+    df = scrap('https://monexnews.com/kurs-valuta-asing.htm?kurs=JPY') #insert url here
 
     #This part for rendering matplotlib
     fig = plt.figure(figsize=(5,2),dpi=300)
