@@ -11,8 +11,15 @@ Aplikasi ini bertujuan untuk mengambil data kurs [Japan Yen](monexnews.com/kurs-
 - flask
 - matplotlib
 
-## How to run this app
+## Cara menjalankan aplikasi
 
 1. Clone this app
 
 2. run the app using with `python app.py`
+
+## Hasil data
+![Graph Kurs Japan Yen](plot1.png)
+
+## Kesimpulan
+
+Terjadi penurunan kurs JPY jika dibandingkan awal hingga akhir tahun
