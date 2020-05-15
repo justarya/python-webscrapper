@@ -5,14 +5,16 @@ from bs4 import BeautifulSoup
 from io import BytesIO
 import base64
 import matplotlib.pyplot as plt
+import matplotlib
 import dateparser
+matplotlib.use('Agg')
 
 app = Flask(__name__)
 
 def scrap(url):
     #This is fuction for scrapping
     url_get = requests.get(url)
-    soup = BeautifulSoup(url_get.content,"html.parser")
+    soup = BeautifulSoup(url_get.content, 'html.parser')
     
     #Find the key to get the information
     table = soup.find('table') 
@@ -45,7 +47,7 @@ def scrap(url):
 
 @app.route("/")
 def index():
-    df = scrap('https://monexnews.com/kurs-valuta-asing.htm?kurs=JPY') #insert url here
+    df = scrap('https://monexnews.com/kurs-valuta-asing.htm?kurs=JPY&searchdatefrom=01-01-2020&searchdateto=14-05-2020') #insert url here
 
     #This part for rendering matplotlib
     fig = plt.figure(figsize=(5,2),dpi=300)
